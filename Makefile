@@ -28,7 +28,8 @@ work: enable_pf $(CLICLICK)
 	cliclick -r -m verbose -w 1000 m:1370,1 kd:alt c:1370,1
 
 block-entertainment: block-ip-www.facebook.com block-ip-d3.ru block-ip-top.rbc.ru \
-    		     block-ip-www.quora.com block-ip-api.twitter.com
+    		     block-ip-www.quora.com block-ip-api.twitter.com block-ip-roem.ru \
+		     block-ip-habrahabr.ru block-ip-www.youtube.com
 
 unblock-entertainment:
 	$(BYROOT) pfctl -t blockedips -T flush 2>/dev/null
