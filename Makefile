@@ -11,6 +11,9 @@ ERL=$(shell which erl || echo install-erlang-$(OS))
  
 # Targets
 
+help:
+	@echo "No help yet"
+
 translate: $(CURL)
 	@while true ; do \
 	    read -p "Phrase: " INPUT && \
@@ -39,6 +42,32 @@ relax: enable_pf $(CLICLICK)
 	make unblock-entertainment
 	cliclick -r -m verbose -w 1000 m:1370,1 kd:alt c:1370,1
 
+ready: setup-repos setup-useful-packages setup-env
+
+setup-env: setup-ps setup-editor setup-alias-vi
+
+setup-ps:
+	echo "export PS1=\"\[\033[36m\][\u@\h \w]\[\033[39m\] \"" >> ~/.bash_profile
+	. ~/.bash_profile
+	
+setup-editor:
+	echo "export EDITOR=vim" >> ~/.bash_profile
+	. ~/.bash_profile
+
+setup-alias-vi:
+	echo "alias vi=vim" >> ~/.bash_profile
+	. ~/.bash_profile
+
+setup-repos: setup-repos-$(OS)
+
+setup-repos-linux: 
+	$(BYROOT) yum install -y epel-release || true
+
+setup-useful-packages:
+	for i in htop gdb dstat iperf iptraf telnet traceroute tcpkali tcpdump \
+	vim-enhanced \
+	; do make install-$$i-$(OS) ; done
+
 
 # Tools
 
@@ -59,8 +88,8 @@ install-%-darwin:
 	( echo "Please, install $*" ; false )
 
 install-%-linux:
-	$(BYROOT) apt-get install $* || \
-	$(BYROOT) yum install $* || \
+	$(BYROOT) apt-get -y install $* || \
+	$(BYROOT) yum install -y $* || \
 	( echo "Please, install $*" ; false )
 
 install-%:
